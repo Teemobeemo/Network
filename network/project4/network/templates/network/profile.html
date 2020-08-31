@@ -17,5 +17,38 @@
 </div>
 {% endfor %}
 
+{% if posts.has_other_pages %}
+<ul>
+{% if posts.has_previous %}
+<!-- Left -->
+<li><a href="?username={{user1.username}}&page={{posts.previous_page_number}}"><</a></li>
+{% endif %}
+
+{% for i in posts.paginator.page_range %}
+
+{% if posts.number == i %}
+
+<li><p>{{i}}</p></li>
+
+{% else %}
+<li>
+<a href="?username={{user1.username}}&page={{i}}">{{i}}</a>
+</li>
+{% endif %}
+
+
+
+{% endfor %}
+
+{% if posts.has_next %}
+<li>
+<a href="?username={{user1.username}}&page={{posts.next_page_number}}">></a>
+</li>
+{% endif %}
+
+</ul>
+{% endif %}
+
+
 
 {% endblock %}
