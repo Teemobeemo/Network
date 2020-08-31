@@ -1,17 +1,12 @@
 {% extends "network/layout.html" %}
 
+{% block title %}
+{{user1}}
+{% endblock %}
+
 {% block body %}
-<!-- user.is_authenticated -->
 
-{% if user.is_authenticated %}
-
-<form action="/" method="post">
-    {% csrf_token %}
-    {{form}}
-    <button type="submit">Post!</button>
-</form>
-
-{% endif %}
+<h1>{{user1.username}}</h1>
 
 {% for post in posts %}
 <div class="post">
@@ -20,7 +15,6 @@
     <p>{{post.created_at}}</p>
     <p>{{post.likes}}</p>
 </div>
-
 {% endfor %}
 
 
