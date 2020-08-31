@@ -11,3 +11,7 @@ class Post(models.Model):
     content = models.CharField(max_length=500,default="")
     created_at = models.DateTimeField(default=timezone.now)
     likes = models.PositiveIntegerField(default=0)
+
+class Follow(models.Model):
+    user_id  = models.ForeignKey(User,default=1,on_delete=models.CASCADE,related_name='user')
+    follow_id = models.ForeignKey(User,default=2,on_delete=models.CASCADE,related_name='followed')
