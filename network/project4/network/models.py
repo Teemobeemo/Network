@@ -9,5 +9,5 @@ class User(AbstractUser):
 class Post(models.Model):
     creator = models.ForeignKey(User,default=1,on_delete=models.CASCADE)
     content = models.CharField(max_length=500,default="")
-    created_at = models.DateTimeField(timezone.now)
+    created_at = models.DateTimeField(default=timezone.now)
     likes = models.PositiveIntegerField(default=0)
