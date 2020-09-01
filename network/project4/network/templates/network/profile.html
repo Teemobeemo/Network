@@ -8,6 +8,19 @@
 
 <h1>{{user1.username}}</h1>
 
+<!-- Follow unfollow buttons -->
+{% if request.user.is_authenticated and request.user.username != user1.username%}
+
+<form action="/api/follow/?next=/profile/?username={{user1.username}}" method="post">
+    {%csrf_token%}
+    <input type="text" hidden aria-hidden="true" name="to_follow" value="{{user1.username}}"> 
+    <button class = "btn" type="submit">Follow</button>
+    <button class = "btn" type="submit" formaction="/api/unfollow/?next=/profile/?username={{user1.username}}" >Unfollow</button>
+</form>
+
+{% endif %}
+
+
 {% for post in posts %}
 <div class="post">
     <h2>{{post.creator}}</h2>
