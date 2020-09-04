@@ -1,59 +1,48 @@
-{% extends "network/layout.html" %}
-
-{% block body %}
+{% extends "network/layout.html" %} {% block body %}
 <!-- user.is_authenticated -->
 
 {% if user.is_authenticated %}
 
 <form action="/" method="post">
-    {% csrf_token %}
-    {{form}}
+    {% csrf_token %} {{form}}
     <button type="submit">Post!</button>
 </form>
 
-{% endif %}
-
-{% for post in posts %}
+{% endif %} {% for post in posts %}
 <div class="post">
-    <a href = "/profile/?username={{post.creator}}"><h2>{{post.creator}}</h2></a>
+    <a href="/profile/?username={{post.creator}}">
+        <h2>{{post.creator}}</h2>
+    </a>
     <p>{{post.content}}</p>
+    <textarea hidden name="" id="{{post.id}}" cols="30" rows="10"></textarea>
     <p>{{post.created_at}}</p>
     <p>{{post.likes}}</p>
+    <button onclick="handle({{post.id}})">edit</button>
 </div>
 
-{% endfor %}
-
-{% if posts.has_other_pages %}
+{% endfor %} {% if posts.has_other_pages %}
 <ul>
-{% if posts.has_previous %}
-<!-- Left -->
-<li><a href="?page={{posts.previous_page_number}}"><</a></li>
-{% endif %}
+    {% if posts.has_previous %}
+    <!-- Left -->
+    <li>
+        <a href="?page={{posts.previous_page_number}}">
+            <</a>
+    </li>
+    {% endif %} {% for i in posts.paginator.page_range %} {% if posts.number == i %}
 
-{% for i in posts.paginator.page_range %}
+    <li>
+        <p>{{i}}</p>
+    </li>
 
-{% if posts.number == i %}
-
-<li><p>{{i}}</p></li>
-
-{% else %}
-<li>
-<a href="?page={{i}}">{{i}}</a>
-</li>
-{% endif %}
-
-
-
-{% endfor %}
-
-{% if posts.has_next %}
-<li>
-<a href="?page={{posts.next_page_number}}">></a>
-</li>
-{% endif %}
+    {% else %}
+    <li>
+        <a href="?page={{i}}">{{i}}</a>
+    </li>
+    {% endif %} {% endfor %} {% if posts.has_next %}
+    <li>
+        <a href="?page={{posts.next_page_number}}">></a>
+    </li>
+    {% endif %}
 
 </ul>
-{% endif %}
-
-
-{% endblock %}
+{% endif %} {% endblock %}
