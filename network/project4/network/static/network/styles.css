@@ -1,13 +1,7 @@
 
-.card {
-    width: 350px;
-    box-shadow: black;
-    padding: 50px;
-    margin: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+.custom-card{
+    width: 400px;
+}
 
 .form-group{
     width: 350px;
@@ -16,10 +10,6 @@
 h2{
     padding-left: 100px;
     padding-bottom: 15px;
-}
-
-.btn .btn-primary{
-    text-align: center;
 }
 
 .navbar-brand{

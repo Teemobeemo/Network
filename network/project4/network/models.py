@@ -3,15 +3,15 @@ from django.db import models
 from django.utils import timezone
 
 
-class User(AbstractUser):
-    pass
+class UserProfile(AbstractUser):
+    bio = models.CharField(max_length=1000)
 
 class Post(models.Model):
-    creator = models.ForeignKey(User,default=1,on_delete=models.CASCADE)
+    creator = models.ForeignKey(UserProfile,default=1,on_delete=models.CASCADE)
     content = models.CharField(max_length=500,default="")
     created_at = models.DateTimeField(default=timezone.now)
     likes = models.PositiveIntegerField(default=0)
 
 class Follow(models.Model):
-    user_id  = models.ForeignKey(User,default=1,on_delete=models.CASCADE,related_name='user')
-    follow_id = models.ForeignKey(User,default=2,on_delete=models.CASCADE,related_name='followed')
+    user_id  = models.ForeignKey(UserProfile,default=1,on_delete=models.CASCADE,related_name='user')
+    follow_id = models.ForeignKey(UserProfile,default=2,on_delete=models.CASCADE,related_name='followed')
