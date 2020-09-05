@@ -1,67 +1,49 @@
-{% extends "network/layout.html" %}
-
-{% block title %}
-{{user1}}
-{% endblock %}
-
-{% block body %}
+{% extends "network/layout.html" %} {% block title %} {{user1}} {% endblock %} {% block body %} {% if user1 %}
 
 <h1>{{user1.username}}</h1>
-
+<p>Following: {{following}} || Followers: {{followers}}</p>
 <!-- Follow unfollow buttons -->
 {% if request.user.is_authenticated and request.user.username != user1.username%}
 
 <form action="/api/follow/?next=/profile/?username={{user1.username}}" method="post">
     {%csrf_token%}
-    <input type="text" hidden aria-hidden="true" name="to_follow" value="{{user1.username}}"> 
-    <button class = "btn" type="submit">Follow</button>
-    <button class = "btn" type="submit" formaction="/api/unfollow/?next=/profile/?username={{user1.username}}" >Unfollow</button>
+    <input type="text" hidden aria-hidden="true" name="to_follow" value="{{user1.username}}">
+    <button class="btn" type="submit">Follow</button>
+    <button class="btn" type="submit" formaction="/api/unfollow/?next=/profile/?username={{user1.username}}">Unfollow</button>
 </form>
 
-{% endif %}
-
-
-{% for post in posts %}
+{% endif %} {% for post in posts %}
 <div class="post">
     <h2>{{post.creator}}</h2>
     <p>{{post.content}}</p>
     <p>{{post.created_at}}</p>
     <p>{{post.likes}}</p>
 </div>
-{% endfor %}
-
-{% if posts.has_other_pages %}
+{% endfor %} {% if posts.has_other_pages %}
 <ul>
-{% if posts.has_previous %}
-<!-- Left -->
-<li><a href="?username={{user1.username}}&page={{posts.previous_page_number}}"><</a></li>
-{% endif %}
+    {% if posts.has_previous %}
+    <!-- Left -->
+    <li>
+        <a href="?username={{user1.username}}&page={{posts.previous_page_number}}">
+            <</a>
+    </li>
+    {% endif %} {% for i in posts.paginator.page_range %} {% if posts.number == i %}
 
-{% for i in posts.paginator.page_range %}
+    <li>
+        <p>{{i}}</p>
+    </li>
 
-{% if posts.number == i %}
-
-<li><p>{{i}}</p></li>
-
-{% else %}
-<li>
-<a href="?username={{user1.username}}&page={{i}}">{{i}}</a>
-</li>
-{% endif %}
-
-
-
-{% endfor %}
-
-{% if posts.has_next %}
-<li>
-<a href="?username={{user1.username}}&page={{posts.next_page_number}}">></a>
-</li>
-{% endif %}
+    {% else %}
+    <li>
+        <a href="?username={{user1.username}}&page={{i}}">{{i}}</a>
+    </li>
+    {% endif %} {% endfor %} {% if posts.has_next %}
+    <li>
+        <a href="?username={{user1.username}}&page={{posts.next_page_number}}">></a>
+    </li>
+    {% endif %}
 
 </ul>
-{% endif %}
-
-
-
-{% endblock %}
+{% endif %} {% else %}
+<h1>Sorry Coiuld not find the user!</h1>
+{% endif %} {% endblock %}

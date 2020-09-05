@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models  import Post, UserProfile
+from .models  import Post, UserProfile,Follow
 
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
@@ -11,10 +11,21 @@ def profile(request):
 
     user = None
     posts_of_user = None
+    followers = None
+    following = None
+
 
     try:
         user = UserProfile.objects.get(username = username)
         posts_of_user_list = Post.objects.filter(creator = user)
+
+        # Get num of followers and following
+        follows_follower = Follow.objects.filter(follow_id=user)
+        followers = follows_follower.count()
+        
+        follow_following = Follow.objects.filter(user_id=user)
+        following = follow_following.count()
+
         paginator = Paginator(posts_of_user_list, 5)
 
         try:
@@ -27,6 +38,10 @@ def profile(request):
     except UserProfile.DoesNotExist:
         print(f'Could not find user with username = {username}')
     
-    return render(request,'network/profile.html',{"user1":user,"posts":posts_of_user})
+    return render(request,'network/profile.html',
+                        {"user1":user,
+                        "posts":posts_of_user,
+                        'followers':followers,
+                        'following':following})
     
     

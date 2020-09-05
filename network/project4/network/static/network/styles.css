@@ -1,17 +1,19 @@
-
-.custom-card{
+.custom-card {
     width: 400px;
 }
 
-.form-group{
+.form-group {
     width: 350px;
 }
 
-h2{
+h2 {
     padding-left: 100px;
     padding-bottom: 15px;
 }
 
-.navbar-brand{
+.navbar-brand {
     padding: 20px;
 }
+
+
+/* pagination and form  */
