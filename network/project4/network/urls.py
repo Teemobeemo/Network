@@ -5,6 +5,7 @@ from . import views
 from . import home_views
 from . import profile_views
 from . import follow_views
+from .api import like
 from .api import follow
 urlpatterns = [
     path("", home_views.index, name="index"),
@@ -15,5 +16,9 @@ urlpatterns = [
     path("following/", follow_views.follow_view, name='follow_views'),
     path("api/follow/",follow.follow_api,name='follow_api'),
     path("api/unfollow/",follow.unfollow_api,name='unfollow_api'),
+    path("api/like/",like.like_api,name='like_api'),
+    path("api/dislike/",like.dislike_api,name='dislike_api'),
+    path("api/getlike/",like.get_like_api,name='get_like_api'),
+
 
 ]

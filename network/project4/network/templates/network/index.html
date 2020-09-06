@@ -1,5 +1,6 @@
 {% extends "network/layout.html" %} {% block body %}
-
+{% load static %}  
+    <script src="{% static 'network/script.js' %}" type="text/javascript"></script>  
 <div class="container">
     {% if user.is_authenticated %}
 
@@ -26,8 +27,9 @@
             <p class="card-text">{{post.content}}</p>
             <textarea hidden name="" id="{{post.id}}" cols="30" rows="10"></textarea>
             <p class="card-text">{{post.created_at}}</p>
-            <p class="card-text">{{post.likes}}</p>
-            <button onclick="handle({{post.id}})">edit</button>
+            <p class="card-text" id="like-{{post.id}}">{{post.likes}}</p>
+            <button onclick="handleLike({{post.id}})">Like</button>
+
         </div>
         </div>
 
@@ -59,3 +61,4 @@
         {% endif %}
     </div>
     {% endblock %}
+
