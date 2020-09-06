@@ -3,8 +3,9 @@ from django.http import JsonResponse
 from django.test.client import JSON_CONTENT_TYPE_RE
 from network.models import Like,Post
 
-@login_required(login_url='login')
 def like_api(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'error':"You should be logged in to like a post"})
     post_id = request.GET.get('id')
     user = request.user
     try :
