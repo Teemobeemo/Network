@@ -28,45 +28,52 @@
             <textarea hidden name="" id="{{post.id}}" cols="30" rows="10"></textarea>
             <p class="card-text">{{post.created_at}}</p>
             <p class="card-text" id="like-{{post.id}}">{{post.likes}}</p>
+
+            {% if request.user.is_authenticated %}
+            {% if post.creator != request.user %}
+            
             <button onclick="handleLike({{post.id}})">Like</button>
+            {% endif %}
+            {% endif %}
+
 
         </div>
     </div>
 
-    {% endfor %} 
-    
+    {% endfor %}
+
     <div class="custom-card text-center mx-auto mt-5">
-    {% if posts.has_other_pages %}
-    <ul class="pagination">
-        {% if posts.has_previous %}
-        <!-- Left -->
-        <li  class="page-item">
-            <a class="page-link" href="?page={{posts.previous_page_number}}">
-                <span aria-hidden="true">&laquo;</span>
-        <span class="sr-only">Previous</span>
-            </a>
-        </li>
-        {% endif %} {% for i in posts.paginator.page_range %} {% if posts.number == i %}
+        {% if posts.has_other_pages %}
+        <ul class="pagination">
+            {% if posts.has_previous %}
+            <!-- Left -->
+            <li class="page-item">
+                <a class="page-link" href="?page={{posts.previous_page_number}}">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            {% endif %} {% for i in posts.paginator.page_range %} {% if posts.number == i %}
 
-        <li  class="page-item active">
-            <p class="page-link">{{i}}</p>
-        </li>
+            <li class="page-item active">
+                <p class="page-link">{{i}}</p>
+            </li>
 
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{i}}">{{i}}</a>
-        </li>
-        {% endif %} {% endfor %} {% if posts.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{posts.next_page_number}}">
-                <span aria-hidden="true">&raquo;</span>
-        <span class="sr-only">Next</span>
-            </a>
-        </li>
-        {% endif %}
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{i}}">{{i}}</a>
+            </li>
+            {% endif %} {% endfor %} {% if posts.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{posts.next_page_number}}">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+            {% endif %}
 
-    </ul>
-</div>
+        </ul>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
