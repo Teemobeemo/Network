@@ -7,24 +7,17 @@
         <div class="col-10 col-md-8 col-lg-6">
             <h2>Login</h2>
 
-            <form action="{% url 'register' %}" method="post">
+            <form action="{% url 'login' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group">
-                    <input class="form-control" autofocus type="text" name="username" placeholder="Username">
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="email" name="email" placeholder="Email Address">
+                    <input autofocus class="form-control" type="text" name="username" placeholder="Username">
                 </div>
                 <div class="form-group">
                     <input class="form-control" type="password" name="password" placeholder="Password">
                 </div>
-                <div class="form-group">
-                    <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
-                </div>
-                <button class="btn btn-primary align-items-center" type="submit">Login</button>
-                <p>Dont have an account? <a href="{% url 'login' %}">Register here.</a></p>
-
+                <input class="btn btn-primary" type="submit" value="Login">
             </form>
+            
 
         </div>
     </div>
