@@ -3,21 +3,25 @@
 <script src="{% static 'network/script.js' %}" type="text/javascript"></script>
 <div class="container">
     {% if user.is_authenticated %}
+    <div class="custom-card mx-auto">
+        <form action="/" method="post">
+            {% csrf_token %}
+            {% load widget_tweaks%}
 
-    <form action="/" method="post">
-        {% csrf_token %}
-        {% load widget_tweaks%}
-
-        {% for field in form %}
-
-        {% render_field field class+="input-box" %}
-
-        {% endfor %}
-        <button type="submit">Post!</button>
-    </form>
+            {% for field in form %}
+            <div class="form-group">
+                {% render_field field class+="form-control custom-card" %}
+            </div>
+            {% endfor %}
+            <button class="btn btn-primary float-right" type="submit">Post!</button>
+        </form>
+    </div>
 
     {% endif %}
 
+    <div style="min-height: 3rem; "></div>
+
+    <!-- Posts -->
     {% for post in posts %}
     <div class="card text-center custom-card mx-auto mt-3">
         <div class="card-body">
@@ -29,11 +33,19 @@
             <p class="card-text">{{post.created_at}}</p>
             <p class="card-text" id="like-{{post.id}}">{{post.likes}}</p>
 
+            <!-- Like button -->
             {% if request.user.is_authenticated %}
             {% if post.creator != request.user %}
-            
-            <button onclick="handleLike({{post.id}})">Like</button>
+            <svg onclick="handleLike({{post.id}})" width="1em" height="1em" viewBox="0 0 16 16"
+                class="bi bi-heart svg-btn" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                    d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+            </svg>
+
             {% endif %}
+
+
+
             {% endif %}
 
 
@@ -42,6 +54,7 @@
 
     {% endfor %}
 
+    <!-- Pagination -->
     <div class="custom-card text-center mx-auto mt-5">
         {% if posts.has_other_pages %}
         <ul class="pagination">
@@ -53,7 +66,9 @@
                     <span class="sr-only">Previous</span>
                 </a>
             </li>
-            {% endif %} {% for i in posts.paginator.page_range %} {% if posts.number == i %}
+            {% endif %} {% for i in posts.paginator.page_range %}
+
+            {% if posts.number == i %}
 
             <li class="page-item active">
                 <p class="page-link">{{i}}</p>
@@ -63,7 +78,9 @@
             <li class="page-item">
                 <a class="page-link" href="?page={{i}}">{{i}}</a>
             </li>
-            {% endif %} {% endfor %} {% if posts.has_next %}
+            {% endif %}
+            {% endfor %}
+            {% if posts.has_next %}
             <li class="page-item">
                 <a class="page-link" href="?page={{posts.next_page_number}}">
                     <span aria-hidden="true">&raquo;</span>
@@ -73,7 +90,8 @@
             {% endif %}
 
         </ul>
+        {% endif %}
     </div>
-    {% endif %}
+
 </div>
 {% endblock %}
