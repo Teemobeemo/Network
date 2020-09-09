@@ -1,43 +1,49 @@
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from network.models import UserProfile,Follow
 
-@login_required(login_url='login')
 def follow_api(request):
-    nextA= request.GET.get('next')
-    
     current_user = request.user
 
-    to_follow = request.POST.get("to_follow")
+    if not current_user.is_authenticated:
+        return JsonResponse({'error':"You should be logged in to like a post"})
+
+    to_follow = request.GET.get("to_follow")
 
     to_follow_user = UserProfile.objects.get(username=to_follow)
 
     following_user = Follow.objects.filter(user_id=current_user)
+    
     for user in following_user:
         if (user.follow_id.username == to_follow):
-            return redirect(nextA)
+            return JsonResponse({'error':'Already following'})
 
     follow = Follow(user_id=current_user,follow_id = to_follow_user)
     follow.save()
-
-    return redirect(nextA)
-
+    follows_follower = Follow.objects.filter(follow_id=to_follow_user)
+    followers = follows_follower.count()
+    return JsonResponse({"success":f'{followers}'})
+ 
 def unfollow_api(request):
-    nextA= request.GET.get('next')
-    
     current_user = request.user
 
-    to_follow = request.POST.get("to_follow")
+    if not current_user.is_authenticated:
+        return JsonResponse({'error':"You should be logged in to like a post"})
+
+    to_follow = request.GET.get("to_follow")
 
     to_follow_user = UserProfile.objects.get(username=to_follow)
+    try:
+        following_user = Follow.objects.filter(user_id=current_user)
 
-    following_user = Follow.objects.filter(user_id=current_user)
-
-    for user in following_user:
-        if (user.follow_id.username == to_follow):
-            user.delete()
-            return redirect(nextA)
-    return redirect(nextA)
+        for user in following_user:
+            if (user.follow_id.username == to_follow):
+                user.delete()
+                follows_follower = Follow.objects.filter(follow_id=to_follow_user)
+                followers = follows_follower.count()
+                return JsonResponse({"success":f'{followers}'})
+    except:
+        return JsonResponse({"error":"You are not follwoing the user"})
 
 

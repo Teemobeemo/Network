@@ -14,6 +14,7 @@ def profile(request):
     followers = None
     following = None
 
+    isFollowing = False
 
     try:
         user = UserProfile.objects.get(username = username)
@@ -26,6 +27,12 @@ def profile(request):
         follow_following = Follow.objects.filter(user_id=user)
         following = follow_following.count()
 
+        # Check if the requesting user follows or un follows the person
+        for follow in follows_follower:
+            if(follow.user_id.username == request.user.username):
+                isFollowing=True
+                break
+
         paginator = Paginator(posts_of_user_list, 5)
 
         try:
@@ -37,11 +44,12 @@ def profile(request):
 
     except UserProfile.DoesNotExist:
         print(f'Could not find user with username = {username}')
-    
+
     return render(request,'network/profile.html',
                         {"user1":user,
                         "posts":posts_of_user,
                         'followers':followers,
-                        'following':following})
+                        'following':following,
+                        'isFollowing':isFollowing})
     
     
