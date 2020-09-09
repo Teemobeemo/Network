@@ -1,4 +1,4 @@
-.custom-card {
+.custom-card{
     width: 400px;
 }
 
@@ -15,10 +15,10 @@ h2 {
     padding: 20px;
 }
 
-
-/* TODO pagination and form  */
-
-
 .card-body{
     margin-bottom: 10px;
+}
+
+.svg-btn{
+    cursor: pointer;
 }
