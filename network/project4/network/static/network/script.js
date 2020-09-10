@@ -12,6 +12,21 @@ async function handleLike(id) {
     }
 }
 
+async function handleDisLike(id) {
+    console.log(id);
+    const response = await fetch(`/api/dislike?id=${id}`)
+    const json = await response.json();
+    const likes = json.likes
+    console.log(likes);
+    if (likes) {
+        document.getElementById(`like-${id}`).innerText = likes;
+    } else {
+        const error = json.error;
+        alert(error);
+    }
+}
+
+
 async function handleFollow(id){
     console.log(id)
     const response = await fetch(`/api/follow?to_follow=${id}`)
@@ -46,4 +61,9 @@ async function handleUnFollow(id){
         const error = json.error;
         alert(error)
     }
+}
+window.onload = () => {
+    const cardbodylist = document.getElementsByClassName('card-body')
+    console.log(cardbodylist)
+    console.log('ready event')
 }
