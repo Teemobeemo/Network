@@ -1,32 +1,38 @@
-from django.contrib.auth import authenticate, login, logout
-from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
 
 from .forms import NewPostForm
 from .models import Post
 
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
+# Home route (All posts route)
 def index(request):
     new_post_form=None
 
+    # Get which page we are on (Pagination)
     page = request.GET.get("page",1)
-
+    
+    # Check if user is logged in
     if request.user.is_authenticated:
+        # Get the new post form if it is filled out.
         new_post_form = NewPostForm(request.POST or None)
 
+        # Check if its valid
         if new_post_form.is_valid():
-            print("form is valid")
+
+            # Create a new post obj with the data and add the creator
             post: Post = new_post_form.save(commit=False)
             post.creator = request.user
             post.save()
 
+    # Get list of posts
     posts_list = Post.objects.all()
+
+    # Init paginator with the list and a limit
+    # TODO change limit to 10
     paginator = Paginator(posts_list, 5)
 
+    # Try to send the correct page using paginator
     try:
         posts = paginator.page(page)
     except PageNotAnInteger:
@@ -34,4 +40,5 @@ def index(request):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
 
+    # Render the page with the form and the posts (with paginator)
     return render(request, "network/index.html",{"form":new_post_form,"posts":posts})
