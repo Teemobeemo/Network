@@ -3,15 +3,43 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
-from .models import Follow,UserProfile
+from itertools import chain
+
+from .models import Follow, Post
+
 
 @login_required(login_url='/login')
 def follow_view(request):
+    # Get the current logged in user
     current_user = request.user
+
+   # Get which page we are on (Pagination)
+    page = request.GET.get("page", 1)
+
+    # Get all the follow objects in which the user followed someone else
     follows = Follow.objects.filter(user_id=current_user)
 
+    # List of posts (curr none)
+    post_list = []
 
+    # For each follow obj, loop
+    for follow in follows:
+        # Get posts by the followed user
+        posts = Post.objects.filter(creator=follow.follow_id)
 
+        # Chain them to the previous list
+        post_list = list(chain(post_list, posts))
 
-    return render(request,"network/follow.html")
+    paginator = Paginator(post_list, 5)
+
+    # Try to send the correct page using paginator
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+
+    return render(request, "network/follow.html", {'posts': posts})
