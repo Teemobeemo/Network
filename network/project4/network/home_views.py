@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from .forms import NewPostForm
-from .models import Post
+from .models import Post, UserProfile
 
 from django.core.paginator import Paginator,PageNotAnInteger,EmptyPage
 
@@ -28,6 +28,8 @@ def index(request):
     # Get list of posts
     posts_list = Post.objects.all()
 
+    posts_list = posts_list.order_by('-created_at')
+    
     # Init paginator with the list and a limit
     # TODO change limit to 10
     paginator = Paginator(posts_list, 5)
