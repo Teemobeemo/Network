@@ -21,17 +21,20 @@ def follow_view(request):
     # Get all the follow objects in which the user followed someone else
     follows = Follow.objects.filter(user_id=current_user)
 
-    # List of posts (curr none)
-    post_list = []
+    # List of posts id
+    post_list_id = []
 
     # For each follow obj, loop
     for follow in follows:
+        
         # Get posts by the followed user
         posts = Post.objects.filter(creator=follow.follow_id)
 
-        # Chain them to the previous list
-        post_list = list(chain(post_list, posts))
+        for post in posts:
+            post_list_id.append(post.id)
 
+    post_list = Post.objects.filter(pk__in = post_list_id).order_by('-created_at')
+    
     paginator = Paginator(post_list, 5)
 
     # Try to send the correct page using paginator
