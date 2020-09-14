@@ -78,8 +78,15 @@ async function handleUnFollow(id) {
     }
 }
 
-// Run the updateLike function when the page is loaded fully
+// Run the updateLike and the textArea grow function when the page is loaded fully
 window.onload = async () => {
+    const textAreas = document.getElementsByClassName('textarea')
+    for (let i =0; i<textAreas.length; i++){
+        const textArea = textAreas[i];
+        textArea.style.height = "5px";
+        textArea.style.height = (textArea.scrollHeight)+"px";
+        textArea.style.overflow = 'hidden'
+    }
     updateLikes();
 }
 
@@ -132,4 +139,107 @@ async function updateLikes() {
         }
     }
 
+}
+
+// Get the csrf token from the browser
+function csrfcookie () {
+    var cookieValue = null,
+        name = 'csrftoken';
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+};
+
+// Edit post function
+async function acceptBtn(id){
+    const textarea = document.getElementById(`textarea-${id}`);
+    const content = textarea.value;
+    
+    const response = await fetch('/api/edit/',{
+        method: 'POST', 
+        headers: {
+          'Content-Type': "application/json; charset=UTF-8",
+          "X-CSRFToken":csrfcookie(),
+        },
+        body: JSON.stringify({post:id,post_content:content})
+      });
+    const json = await response.json()
+    const status = json.status
+
+    if(status){
+        // Successful
+        const textarea = document.getElementById(`textarea-${id}`);
+        const editBTN = document.getElementById(`edit-btn-${id}`);
+        const acceptBTN = document.getElementById(`accept-${id}`);
+        const declineBTN = document.getElementById(`decline-${id}`);
+        
+        textarea.style.resize='none'
+        textarea.readOnly = true;
+          editBTN.style.display='inline-block'
+        acceptBTN.style.display='none'
+        declineBTN.style.display='none'  }
+    else{
+        alert(json.error)
+    }
+}
+
+function showEditBtn(id){
+    // Get the text area
+    const textarea = document.getElementById(`textarea-${id}`);
+localStorage.setItem(`text-${id}`,textarea.style.height)
+    // If no textarea found
+    if (!textarea){
+        console.error('No text area found')
+        return;
+    }
+
+    // Make the text area editable
+    textarea.style.resize='vertical'
+    textarea.readOnly = false
+
+    const editBTN = document.getElementById(`edit-btn-${id}`);
+    const acceptBTN = document.getElementById(`accept-${id}`);
+    const declineBTN = document.getElementById(`decline-${id}`);
+
+    editBTN.style.display='none'
+    acceptBTN.style.display='inline-block'
+    declineBTN.style.display='inline-block'
+
+}
+
+
+async function declineBtn(id){
+    const textarea = document.getElementById(`textarea-${id}`);
+    const editBTN = document.getElementById(`edit-btn-${id}`);
+    const acceptBTN = document.getElementById(`accept-${id}`);
+    const declineBTN = document.getElementById(`decline-${id}`);
+    
+    textarea.style.resize='none'
+    textarea.readOnly = true
+    
+    textarea.style.height = localStorage.getItem(`text-${id}`);
+
+    editBTN.style.display='inline-block'
+    acceptBTN.style.display='none'
+    declineBTN.style.display='none'
+
+    // Get the post content
+    
+    const response = await fetch(`/api/post/content?id=${id}`)
+    const json = await response.json()
+
+    const content = json.content
+    if(!content){
+        alert(error)
+        return
+    }
+    textarea.value = content
 }
