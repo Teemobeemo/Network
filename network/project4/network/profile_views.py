@@ -26,6 +26,7 @@ def profile(request):
 
         # Get all the posts by the user
         posts_of_user_list = Post.objects.filter(creator=user)
+        posts_of_user_list = posts_of_user_list.order_by('-created_at')
 
         # Get num of followers and following
         follows_follower = Follow.objects.filter(follow_id=user)
