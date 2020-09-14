@@ -25,18 +25,23 @@
     {% for post in posts %}
     <div class="card text-center custom-card mx-auto mt-3">
         <div class="card-body" id={{post.id}}>
+            <button id="edit-btn-{{post.id}}" onclick="showEditBtn('{{post.id}}')">Edit</button>
+
+            <button style="display: none;" onclick="acceptBtn('{{post.id}}')" id="accept-{{post.id}}">👍</button>
+            <button style="display: none;" onclick="declineBtn('{{post.id}}')" id="decline-{{post.id}}">👎</button>
+
             <a href="/profile/?username={{post.creator}}">
                 <h5 class="card-title">{{post.creator}}</h5>
             </a>
-            <p class="card-text">{{post.content}}</p>
-            <textarea hidden name="" id="{{post.id}}" cols="30" rows="10"></textarea>
+            <textarea name="content" id="textarea-{{post.id}}" class="form-control textarea" oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' style="resize: none;"
+                readonly>{{post.content}}</textarea>
             <p class="card-text">{{post.created_at}}</p>
             <p class="card-text" id="like-{{post.id}}">{{post.likes}}</p>
 
             <!-- Like button -->
             {% if request.user.is_authenticated %}
             {% if post.creator != request.user %}
-            
+
             <!-- Like -->
             <svg onclick="handleLike({{post.id}})" width="1em" height="1em" viewBox="0 0 16 16"
                 class="bi bi-heart svg-btn" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -45,9 +50,11 @@
             </svg>
 
             <!-- Disklike  -->
-            <svg style="display: none" onclick="handleDisLike({{post.id}})" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-heart-fill svg-btn" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-              </svg>
+            <svg style="display: none" onclick="handleDisLike({{post.id}})" width="1em" height="1em" viewBox="0 0 16 16"
+                class="bi bi-heart-fill svg-btn" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                    d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+            </svg>
             {% endif %}
 
 
