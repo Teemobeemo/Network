@@ -1,24 +1,66 @@
-.custom-card{
-    width: 400px;
+body {
+  background-color: burlywood;
+  font-family: "Montserrat", sans-serif;
+  min-height: 100vh;
+  display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+.custom-card {
+  width: 400px;
 }
 
 .form-group {
-    width: 350px;
+  width: 350px;
 }
 
 h2 {
-    padding-left: 100px;
-    padding-bottom: 15px;
+  padding-left: 100px;
+  padding-bottom: 15px;
 }
 
 .navbar-brand {
-    padding: 20px;
+  padding: 20px;
 }
 
-.card-body{
-    margin-bottom: 10px;
+.card-body {
+  margin-bottom: 10px;
 }
 
-.svg-btn{
-    cursor: pointer;
+.svg-btn {
+  cursor: pointer;
+  margin-top: 0.4em;
+  margin-left: 0.5em;
+}
+
+.profileBTN {
+  max-width: 100%;
+}
+
+.profile-card {
+  position: absolute;
+  min-height: 25vh;
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+@media only screen and (max-width: 993px) {
+  .profile-card {
+    position: relative;
+    max-width: 400px;
+    margin: auto;
+  }
+}
+
+footer {
+}
+
+hero{
+    font-size: 5rem;
+}
+
+.like-box{
+    display: flex; flex-direction: row;   
 }

@@ -101,9 +101,10 @@ async function updateLikes() {
 
         // Get the card form the list
         const card = cardbodylist[i]
+        const likeBox = card.getElementsByClassName('like-box').item(0)
 
         // Get references to the dislike and like button
-        const dislike_btn = card.lastElementChild
+        const dislike_btn = likeBox.lastElementChild
         const like_btn = dislike_btn.previousElementSibling
 
         // Continue if the elements are not of type SVG

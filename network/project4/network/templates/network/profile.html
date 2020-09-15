@@ -2,37 +2,89 @@
 {% load static %}
 <script src="{% static 'network/script.js' %}" type="text/javascript"></script>
 <div class="container">
-    <h1>{{user1.username}}</h1>
-    <p>
-        Following: {{following}} || Followers:
-        <span id="followers">{{followers}}</span>
-    </p>
-    <!-- Follow unfollow buttons -->
-    {% if request.user.is_authenticated and request.user.username != user1.username%}
-    {% if isFollowing %}
-    <button id="follow" style="display: none;" onclick="handleFollow('{{user1.username}}')">Follow</button>
+    <div class="card profile-card">
+        <h1 class="hero">{{user1.username}}</h1>
+        <p>
+            Following: {{following}} || Followers:
+            <span id="followers">{{followers}}</span>
+        </p>
+        <!-- Follow unfollow buttons -->
+        {% if request.user.is_authenticated and request.user.username != user1.username%}
+        {% if isFollowing %}
+        <button class="btn btn-primary profileBTN" id="follow" style="display: none;"
+            onclick="handleFollow('{{user1.username}}')">Follow</button>
 
-    <button id="unfollow" onclick="handleUnFollow('{{user1.username}}')">UnFollow</button>
-    {% else %}
+        <button class="btn btn-primary profileBTN" id="unfollow" onclick="handleUnFollow('{{user1.username}}')">UnFollow</button>
+        {% else %}
 
-    <button id="unfollow" style="display: none;" onclick="handleUnFollow('{{user1.username}}')">UnFollow</button>
+        <button class="btn btn-primary profileBTN" id="unfollow" style="display: none;"
+            onclick="handleUnFollow('{{user1.username}}')">UnFollow</button>
 
-    <button id="follow" onclick="handleFollow('{{user1.username}}')">Follow</button>
+        <button class="btn btn-primary profileBTN" id="follow" onclick="handleFollow('{{user1.username}}')">Follow</button>
 
-    {% endif %}
+        {% endif %}
 
-    {% endif %} {% for post in posts %}
+        {% endif %}
+
+    </div>
+
+    <!-- Posts -->
+    {% for post in posts %}
     <div class="card text-center custom-card mx-auto mt-3">
-        <div class="card-body">
+        <div class="card-body" id={{post.id}}>
+
             <a href="/profile/?username={{post.creator}}">
                 <h5 class="card-title">{{post.creator}}</h5>
             </a>
-            <p class="card-text">{{post.content}}</p>
-            <textarea hidden name="" id="{{post.id}}" cols="30" rows="10"></textarea>
-            <p class="card-text">{{post.created_at}}</p>
-            <p class="card-text" id="like-{{post.id}}">{{post.likes}}</p>
+
+            <textarea name="content" id="textarea-{{post.id}}" class="form-control textarea"
+                oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                style="resize: none; background-color: #FFFFFF;" readonly>{{post.content}}</textarea>
+
+            <p class="card-text mt-2">{{post.created_at}}</p>
+
+            <button style="display: none;" onclick="acceptBtn('{{post.id}}')" id="accept-{{post.id}}">👍</button>
+            <button style="display: none;" onclick="declineBtn('{{post.id}}')" id="decline-{{post.id}}">👎</button>
+
+            <div class="ml-auto float-left like-box" style="display: flex; flex-direction: row;">
+                <p class="card-text" id="like-{{post.id}}">{{post.likes}}</p>
+
+                <!-- Like button -->
+                {% if request.user.is_authenticated %}
+                {% if post.creator != request.user %}
+
+                <!-- Like -->
+                <svg onclick="handleLike({{post.id}})" width="1em" height="1em" viewBox="0 0 16 16"
+                    class="bi bi-heart svg-btn" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M8 2.748l-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                </svg>
+
+                <!-- Disklike  -->
+                <svg style="display: none" onclick="handleDisLike({{post.id}})" width="1em" height="1em"
+                    viewBox="0 0 16 16" class="bi bi-heart-fill svg-btn" fill="currentColor"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z" />
+                </svg>
+                {% endif %}
+                {% endif %}
+
+            </div>
+
+            {% if request.user.is_authenticated %}
+            {% if request.user.id == post.creator.id %}
+            <button id="edit-btn-{{post.id}}" class="ml-auto float-right btn btn-primary"
+                onclick="showEditBtn('{{post.id}}')">Edit</button>
+            {% endif %}
+            {% else %}
+            {% endif %}
+
+
+
         </div>
     </div>
+
     {% endfor %}
     <!-- Pagination -->
     <div class="custom-card text-center mx-auto mt-5">
