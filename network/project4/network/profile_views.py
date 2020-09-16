@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 # Profile page
 def profile(request):
     # Get the username of the user (of whom the profile is going to be displayed)
-    username = request.GET.get('username')
+    username = request.GET.get('id')
 
     # Get the page (paginator)
     page = request.GET.get("page", 1)
@@ -22,7 +22,7 @@ def profile(request):
 
     try:
         # Try to get the user based on the username provided
-        user = UserProfile.objects.get(username=username)
+        user = UserProfile.objects.get(pk=username)
 
         # Get all the posts by the user
         posts_of_user_list = Post.objects.filter(creator=user)
@@ -37,7 +37,7 @@ def profile(request):
 
         # Check if the requesting user follows or un follows the person
         for follow in follows_follower:
-            if(follow.user_id.username == request.user.username):
+            if(follow.user_id.id == request.user.id):
                 isFollowing = True
                 break
 
